@@ -1,0 +1,151 @@
+/* ============================================================================
+ * tokens.css  —  Sistemi i dizajnit: ngjyra, hapësira, tipografi
+ *
+ * MËSIMI (bonus CSS): "design tokens" janë ekuivalenti i `config.js` për stilin.
+ * Asnjë ngjyrë e shkruar direkt në skedarët e tjerë — vetëm `var(--...)`.
+ * Kështu tema e errët është 20 rreshta, jo 500.
+ *
+ * TRI GJENDJE TEMES:
+ *   :root                                    → e ndritshme (parazgjedhja)
+ *   :root[data-theme="dark"]                 → zgjedhje e përdoruesit
+ *   @media (prefers-color-scheme: dark)      → sipas sistemit
+ * ==========================================================================*/
+
+:root {
+  /* ── tipografia ─────────────────────────────────────────────────────── */
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  /* ── hapësira (skalë 4px) ───────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* ── forma ──────────────────────────────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* ── kohëzgjatja e animacioneve ─────────────────────────────────────── */
+  --fast: 120ms;
+  --normal: 220ms;
+  --slow: 400ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── NGJYRAT: tema e ndritshme ──────────────────────────────────────── */
+  --bg: #f3f5fb;
+  --bg-glow: radial-gradient(1200px 600px at 15% -10%, #dfe4ff 0%, transparent 60%),
+             radial-gradient(900px 500px at 95% 0%, #d6f5f0 0%, transparent 55%);
+  --surface: #ffffff;
+  --surface-2: #f6f7fc;
+  --surface-3: #eceff8;
+
+  --text: #14161f;
+  --text-soft: #3d4356;
+  --muted: #6b7185;
+  --border: #e3e7f2;
+  --border-strong: #cdd4e6;
+
+  --accent: #5b5bd6;
+  --accent-hover: #4a4ac4;
+  --accent-soft: #ececff;
+  --accent-text: #ffffff;
+
+  --ok: #16794f;
+  --ok-soft: #ddf5e9;
+  --warn: #a55b00;
+  --warn-soft: #fdefd6;
+  --danger: #c62a2f;
+  --danger-soft: #fde5e6;
+  --info: #1f5fa8;
+  --info-soft: #e2eefc;
+
+  --shadow-sm: 0 1px 2px rgba(20, 22, 31, 0.06);
+  --shadow: 0 1px 3px rgba(20, 22, 31, 0.07), 0 8px 24px -8px rgba(20, 22, 31, 0.12);
+  --shadow-lg: 0 12px 40px -12px rgba(20, 22, 31, 0.28);
+
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+/* ── Tema e errët: VETËM tokenat ndryshojnë, asnjë rregull layout-i ────── */
+:root[data-theme="dark"] {
+  --bg: #0e1016;
+  --bg-glow: radial-gradient(1100px 550px at 12% -12%, #1d2144 0%, transparent 62%),
+             radial-gradient(900px 480px at 96% -4%, #10312e 0%, transparent 58%);
+  --surface: #171a24;
+  --surface-2: #1d212e;
+  --surface-3: #242938;
+
+  --text: #e7e9f2;
+  --text-soft: #c3c8d8;
+  --muted: #939aae;
+  --border: #262b3a;
+  --border-strong: #343b4f;
+
+  --accent: #8b8bf0;
+  --accent-hover: #9d9dfa;
+  --accent-soft: #232449;
+  --accent-text: #0e1016;
+
+  --ok: #4ec994;
+  --ok-soft: #14322a;
+  --warn: #f0b45e;
+  --warn-soft: #33260f;
+  --danger: #f47174;
+  --danger-soft: #38191c;
+  --info: #74b0f5;
+  --info-soft: #12263c;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 48px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* ── Sipas sistemit: aplikohet vetëm kur përdoruesi NUK ka zgjedhur ───── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg: #0e1016;
+    --bg-glow: radial-gradient(1100px 550px at 12% -12%, #1d2144 0%, transparent 62%),
+               radial-gradient(900px 480px at 96% -4%, #10312e 0%, transparent 58%);
+    --surface: #171a24;
+    --surface-2: #1d212e;
+    --surface-3: #242938;
+
+    --text: #e7e9f2;
+    --text-soft: #c3c8d8;
+    --muted: #939aae;
+    --border: #262b3a;
+    --border-strong: #343b4f;
+
+    --accent: #8b8bf0;
+    --accent-hover: #9d9dfa;
+    --accent-soft: #232449;
+    --accent-text: #0e1016;
+
+    --ok: #4ec994;
+    --ok-soft: #14322a;
+    --warn: #f0b45e;
+    --warn-soft: #33260f;
+    --danger: #f47174;
+    --danger-soft: #38191c;
+    --info: #74b0f5;
+    --info-soft: #12263c;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 16px 48px -12px rgba(0, 0, 0, 0.7);
+  }
+}
