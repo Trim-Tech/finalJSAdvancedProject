@@ -3,11 +3,16 @@
  *
  * MËSIMI (bonus CSS): "design tokens" janë ekuivalenti i `config.js` për stilin.
  * Asnjë ngjyrë e shkruar direkt në skedarët e tjerë — vetëm `var(--...)`.
- * Kështu tema e errët është 20 rreshta, jo 500.
+ * Kështu tema e errët është 30 rreshta, jo 500.
+ *
+ * IDENTITETI: blu elektrike mbi të zezë. Njësoj si te panelet e lojërave —
+ * sfondi tërhiqet prapa, ngjyra përdoret PAK dhe vetëm aty ku duhet vëmendja.
+ * Kjo është arsyeja pse `--accent` shfaqet në butonin kryesor dhe në tab-in
+ * aktiv, dhe pothuajse askund tjetër.
  *
  * TRI GJENDJE TEMES:
- *   :root                                    → e ndritshme (parazgjedhja)
- *   :root[data-theme="dark"]                 → zgjedhje e përdoruesit
+ *   :root                                    → e ndritshme
+ *   :root[data-theme="dark"]                 → e errët (PARAZGJEDHJA e projektit)
  *   @media (prefers-color-scheme: dark)      → sipas sistemit
  * ==========================================================================*/
 
@@ -44,108 +49,154 @@
   --normal: 220ms;
   --slow: 400ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* "back-out": e kalon pak destinacionin dhe kthehet — ndjesi elastike. */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── NGJYRAT: tema e ndritshme ──────────────────────────────────────── */
-  --bg: #f3f5fb;
-  --bg-glow: radial-gradient(1200px 600px at 15% -10%, #dfe4ff 0%, transparent 60%),
-             radial-gradient(900px 500px at 95% 0%, #d6f5f0 0%, transparent 55%);
+  /* ── NGJYRAT: tema e ndritshme (blu e ditës) ────────────────────────── */
+  --bg: #eaf0fc;
+  --bg-glow: radial-gradient(1200px 620px at 12% -12%, #c8dcff 0%, transparent 62%),
+             radial-gradient(900px 520px at 96% -4%, #c9f3ff 0%, transparent 58%);
   --surface: #ffffff;
-  --surface-2: #f6f7fc;
-  --surface-3: #eceff8;
+  --surface-2: #f2f6ff;
+  --surface-3: #e6edff;
 
-  --text: #14161f;
-  --text-soft: #3d4356;
-  --muted: #6b7185;
-  --border: #e3e7f2;
-  --border-strong: #cdd4e6;
+  --text: #071228;
+  --text-soft: #2c3d61;
+  --muted: #5f7195;
+  --border: #d8e2f7;
+  --border-strong: #b9c9ea;
 
-  --accent: #5b5bd6;
-  --accent-hover: #4a4ac4;
-  --accent-soft: #ececff;
+  --accent: #1a5cff;
+  --accent-hover: #0b47db;
+  --accent-soft: #dfe9ff;
   --accent-text: #ffffff;
+  /* Ngjyra e dytë e markës: cyan. Përdoret vetëm në gradientë dhe shkëlqime. */
+  --accent-2: #00a6c8;
 
-  --ok: #16794f;
-  --ok-soft: #ddf5e9;
-  --warn: #a55b00;
-  --warn-soft: #fdefd6;
-  --danger: #c62a2f;
-  --danger-soft: #fde5e6;
-  --info: #1f5fa8;
-  --info-soft: #e2eefc;
+  --ok: #00794f;
+  --ok-soft: #d5f6e8;
+  --warn: #94570a;
+  --warn-soft: #fdeed2;
+  --danger: #c4212f;
+  --danger-soft: #fde3e5;
+  --info: #12558f;
+  --info-soft: #dcecff;
 
-  --shadow-sm: 0 1px 2px rgba(20, 22, 31, 0.06);
-  --shadow: 0 1px 3px rgba(20, 22, 31, 0.07), 0 8px 24px -8px rgba(20, 22, 31, 0.12);
-  --shadow-lg: 0 12px 40px -12px rgba(20, 22, 31, 0.28);
+  /* Ngjyrat e gradave (rank). Emrat pasqyrojnë `core/ranks.js`. */
+  --rank-novic: #7b8bb0;
+  --rank-bronz: #c07c3a;
+  --rank-argjend: #8fa4c4;
+  --rank-ar: #e0a020;
+  --rank-diamant: #00a6c8;
+
+  --shadow-sm: 0 1px 2px rgba(7, 18, 40, 0.07);
+  --shadow: 0 1px 3px rgba(7, 18, 40, 0.08), 0 10px 28px -10px rgba(7, 18, 40, 0.18);
+  --shadow-lg: 0 14px 44px -14px rgba(7, 18, 40, 0.32);
+  /* Shkëlqimi (glow) — ky është "efekti special" i të gjithë faqes. */
+  --glow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+          0 6px 26px -6px color-mix(in srgb, var(--accent) 45%, transparent);
+  --grid-line: rgba(26, 92, 255, 0.07);
 
   --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
-/* ── Tema e errët: VETËM tokenat ndryshojnë, asnjë rregull layout-i ────── */
+/* ══════════════════════════════════════════════════════════════════════════
+ * TEMA E ERRËT — identiteti kryesor: blu elektrike mbi të zezë.
+ * VETËM tokenat ndryshojnë. Asnjë rregull layout-i nuk përsëritet këtu.
+ * ═══════════════════════════════════════════════════════════════════════ */
 :root[data-theme="dark"] {
-  --bg: #0e1016;
-  --bg-glow: radial-gradient(1100px 550px at 12% -12%, #1d2144 0%, transparent 62%),
-             radial-gradient(900px 480px at 96% -4%, #10312e 0%, transparent 58%);
-  --surface: #171a24;
-  --surface-2: #1d212e;
-  --surface-3: #242938;
+  --bg: #04060e;
+  --bg-glow: radial-gradient(1100px 560px at 10% -14%, #0d2a6b 0%, transparent 60%),
+             radial-gradient(900px 500px at 98% -6%, #06364a 0%, transparent 58%),
+             radial-gradient(700px 700px at 50% 115%, #14134a 0%, transparent 62%);
+  --surface: #0a0f1f;
+  --surface-2: #0f1730;
+  --surface-3: #16213f;
 
-  --text: #e7e9f2;
-  --text-soft: #c3c8d8;
-  --muted: #939aae;
-  --border: #262b3a;
-  --border-strong: #343b4f;
+  --text: #e9f0ff;
+  --text-soft: #b3c4e6;
+  --muted: #7286ad;
+  --border: #1a2749;
+  --border-strong: #2a3c69;
 
-  --accent: #8b8bf0;
-  --accent-hover: #9d9dfa;
-  --accent-soft: #232449;
-  --accent-text: #0e1016;
+  --accent: #2f81ff;
+  --accent-hover: #4f97ff;
+  --accent-soft: #0e1c3c;
+  --accent-text: #04060e;
+  --accent-2: #38e8ff;
 
-  --ok: #4ec994;
-  --ok-soft: #14322a;
-  --warn: #f0b45e;
-  --warn-soft: #33260f;
-  --danger: #f47174;
-  --danger-soft: #38191c;
-  --info: #74b0f5;
-  --info-soft: #12263c;
+  --ok: #00d18f;
+  --ok-soft: #04291f;
+  --warn: #ffb020;
+  --warn-soft: #2e2004;
+  --danger: #ff4d5e;
+  --danger-soft: #2e0d13;
+  --info: #38e8ff;
+  --info-soft: #052430;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 16px 48px -12px rgba(0, 0, 0, 0.7);
+  --rank-novic: #7286ad;
+  --rank-bronz: #d08a45;
+  --rank-argjend: #b9cbe6;
+  --rank-ar: #ffc93c;
+  --rank-diamant: #38e8ff;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.55);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 14px 34px -12px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 18px 54px -14px rgba(0, 0, 0, 0.85);
+  --glow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+          0 0 22px -4px color-mix(in srgb, var(--accent) 60%, transparent);
+  --grid-line: rgba(47, 129, 255, 0.09);
 }
 
-/* ── Sipas sistemit: aplikohet vetëm kur përdoruesi NUK ka zgjedhur ───── */
+/* ── Sipas sistemit: aplikohet vetëm kur përdoruesi NUK ka zgjedhur ─────
+ *
+ * ⚠️ VINI RE STRUKTURËN e selektorit: `:root:not([data-theme="light"])
+ *    :not([data-theme="dark"])`. Pa `:not(...)`, media query-ja do ta
+ *    mbishkruante zgjedhjen e shprehur të përdoruesit — dhe butoni «☀ E
+ *    ndritshme» nuk do të bënte asgjë në një kompjuter me temë të errët.
+ */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --bg: #0e1016;
-    --bg-glow: radial-gradient(1100px 550px at 12% -12%, #1d2144 0%, transparent 62%),
-               radial-gradient(900px 480px at 96% -4%, #10312e 0%, transparent 58%);
-    --surface: #171a24;
-    --surface-2: #1d212e;
-    --surface-3: #242938;
+    --bg: #04060e;
+    --bg-glow: radial-gradient(1100px 560px at 10% -14%, #0d2a6b 0%, transparent 60%),
+               radial-gradient(900px 500px at 98% -6%, #06364a 0%, transparent 58%),
+               radial-gradient(700px 700px at 50% 115%, #14134a 0%, transparent 62%);
+    --surface: #0a0f1f;
+    --surface-2: #0f1730;
+    --surface-3: #16213f;
 
-    --text: #e7e9f2;
-    --text-soft: #c3c8d8;
-    --muted: #939aae;
-    --border: #262b3a;
-    --border-strong: #343b4f;
+    --text: #e9f0ff;
+    --text-soft: #b3c4e6;
+    --muted: #7286ad;
+    --border: #1a2749;
+    --border-strong: #2a3c69;
 
-    --accent: #8b8bf0;
-    --accent-hover: #9d9dfa;
-    --accent-soft: #232449;
-    --accent-text: #0e1016;
+    --accent: #2f81ff;
+    --accent-hover: #4f97ff;
+    --accent-soft: #0e1c3c;
+    --accent-text: #04060e;
+    --accent-2: #38e8ff;
 
-    --ok: #4ec994;
-    --ok-soft: #14322a;
-    --warn: #f0b45e;
-    --warn-soft: #33260f;
-    --danger: #f47174;
-    --danger-soft: #38191c;
-    --info: #74b0f5;
-    --info-soft: #12263c;
+    --ok: #00d18f;
+    --ok-soft: #04291f;
+    --warn: #ffb020;
+    --warn-soft: #2e2004;
+    --danger: #ff4d5e;
+    --danger-soft: #2e0d13;
+    --info: #38e8ff;
+    --info-soft: #052430;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 16px 48px -12px rgba(0, 0, 0, 0.7);
+    --rank-novic: #7286ad;
+    --rank-bronz: #d08a45;
+    --rank-argjend: #b9cbe6;
+    --rank-ar: #ffc93c;
+    --rank-diamant: #38e8ff;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.55);
+    --shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 14px 34px -12px rgba(0, 0, 0, 0.8);
+    --shadow-lg: 0 18px 54px -14px rgba(0, 0, 0, 0.85);
+    --glow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+            0 0 22px -4px color-mix(in srgb, var(--accent) 60%, transparent);
+    --grid-line: rgba(47, 129, 255, 0.09);
   }
 }

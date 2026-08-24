@@ -4,7 +4,8 @@
  *         getters, fusha private (#), metoda, toJSON()
  * ==========================================================================*/
 
-import { titleCase, uid } from "../core/utils.js";
+import { AGE } from "../config.js";
+import { clamp, titleCase, toNumber, uid } from "../core/utils.js";
 
 export class Person {
   /**
@@ -21,8 +22,16 @@ export class Person {
    */
   constructor({ id = uid(), name = "", age = 0 } = {}) {
     this.#id = id;
-    this.name = titleCase(name);
-    this.age = Number(age);
+
+    /* KUFIRI I TË DHËNAVE (data boundary).
+     * Këtu hyjnë të dhëna nga localStorage, nga skedarë JSON dhe nga API —
+     * pra nga vende ku NUK kemi kontroll. Një `email: null` ose `age: "abc"`
+     * dikur e rrëzonte importin ose e mbushte panelin me "NaN".
+     * Rregulli: pastro NJËHERË, në hyrje. Pas kësaj rreshtje, çdo instancë
+     * Student është e garantuar e vlefshme dhe pjesa tjetër e kodit
+     * nuk ka nevojë të mbrohet më. */
+    this.name = titleCase(String(name ?? ""));
+    this.age = clamp(Math.round(toNumber(age, AGE.MIN)), AGE.MIN, AGE.MAX);
   }
 
   /** GETTER: përdoret si veti (`person.id`), jo si metodë (`person.id()`). */
@@ -32,12 +41,14 @@ export class Person {
 
   /** "Ardit Krasniqi" → "AK". Përdoret për avatarin në listë. */
   get initials() {
-    return this.name
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((word) => word[0].toUpperCase())
-      .join("");
+    return (
+      this.name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((word) => word[0].toUpperCase())
+        .join("") || "?"
+    );
   }
 
   /** Metodë e zakonshme. Klasa bija do t'a MBISHKRUAJË (override). */

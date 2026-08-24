@@ -49,6 +49,11 @@ export function initFilters({ store, actions }) {
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();
+      /* `renderFilters` me qëllim NUK shkruan mbi inputin kur ai ka fokusin
+         (përndryshe do t'i "vidhte" shkronjat përdoruesit). Por Esc shtypet
+         pikërisht KUR inputi ka fokus — pra teksti mbetej në ekran ndërsa
+         filtri ishte pastruar. E pastrojmë vetë, këtu. */
+      searchInput.value = "";
       actions.setFilters({ query: "" });
     }
   });

@@ -20,8 +20,8 @@ export const LESSONS = [
     week: 2,
     title: "Funksione të avancuara",
     topics: ["default params", "rest / spread", "higher-order functions", "closures"],
-    files: ["js/core/utils.js", "js/core/statistics.js", "js/core/store.js"],
-    look: "`sum(...numbers)` është rest. `debounce()` dhe `once()` janë HOF me closure. statistics.js është map/filter/reduce i pastër.",
+    files: ["js/core/utils.js", "js/core/statistics.js", "js/core/store.js", "js/core/ranks.js", "js/core/achievements.js"],
+    look: "`sum(...numbers)` është rest. `debounce()` dhe `once()` janë HOF me closure. statistics.js është map/filter/reduce i pastër. ranks.js dhe achievements.js janë e njëjta ide e zbatuar te «loja»: të dhëna të derivuara, zero DOM.",
   },
   {
     month: 1,
@@ -37,7 +37,7 @@ export const LESSONS = [
     title: "Module dhe debug",
     topics: ["import / export", "barrel files", "breakpoints", "console i avancuar"],
     files: ["js/main.js", "js/models/index.js", "js/ui/labs/index.js"],
-    look: "26 skedarë, një `<script type=\"module\">`. Vendos breakpoint në `actions.addStudent` dhe shiko Call Stack.",
+    look: "47 skedarë, një `<script type=\"module\">`. Vendos breakpoint në `actions.addStudent` dhe shiko Call Stack.",
   },
   {
     month: 2,
@@ -68,8 +68,8 @@ export const LESSONS = [
     week: 8,
     title: "Event loop dhe konkurrenca",
     topics: ["call stack", "microtasks", "macrotasks", "Promise.all / allSettled"],
-    files: ["js/ui/labs/eventLoopLab.js", "js/ui/labs/asyncLab.js", "js/services/api.js"],
-    look: "Hap tab-in «Laboratori» → «Event Loop» dhe shtyp ▶. Pastaj «Sekuencial vs Paralel».",
+    files: ["js/ui/labs/eventLoopLab.js", "js/ui/labs/asyncLab.js", "js/services/api.js", "js/ui/picker.js", "js/ui/confetti.js"],
+    look: "Hap «Laboratori» → «Event Loop» → ▶. Pastaj «Sekuencial vs Paralel». Për krahasimin më të mirë: shtyp tastin R (ruleta rrotullohet me `await` dhe faqja mbetet e gjallë) kundrejt «🥶 Blloko 1.5s» (i njëjti lak pa `await` — gjithçka ngrin). confetti.js tregon rAF-in në punë.",
   },
   {
     month: 3,

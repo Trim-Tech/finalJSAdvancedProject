@@ -23,9 +23,15 @@ const isTyping = () => {
   );
 };
 
+/* A ka një dialog modal të hapur? Nëse po, tastiera i takon atij.
+   Pa këtë, shtypja e `2` gjatë dialogut «Fshij të gjithë?» ndërronte tab-in
+   FSHEHUR pas modalit — dhe përdoruesi e gjente veten diku tjetër pasi
+   klikonte «Anulo». */
+const modalOpen = () => Boolean(document.querySelector("dialog[open]"));
+
 const TAB_BY_NUMBER = { 1: "panel", 2: "students", 3: "lab", 4: "lesson" };
 
-export function initShortcuts({ actions, onThemeChange }) {
+export function initShortcuts({ actions, onThemeChange, onPick }) {
   document.addEventListener("keydown", (event) => {
     /* ── Ctrl/Cmd + Z: kthe fshirjen e fundit ── */
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z" && !isTyping()) {
@@ -37,8 +43,9 @@ export function initShortcuts({ actions, onThemeChange }) {
       return;
     }
 
-    // Nga këtu poshtë: vetëm shkurtesa me një tast, kur NUK shkruajmë.
-    if (isTyping() || event.ctrlKey || event.metaKey || event.altKey) return;
+    // Nga këtu poshtë: vetëm shkurtesa me një tast, kur NUK shkruajmë
+    // dhe kur asnjë dialog nuk e ka marrë fokusin.
+    if (isTyping() || modalOpen() || event.ctrlKey || event.metaKey || event.altKey) return;
 
     /* ── "/" : shko te kërkimi ── */
     if (event.key === "/") {
@@ -53,6 +60,12 @@ export function initShortcuts({ actions, onThemeChange }) {
       cycleTheme();
       onThemeChange?.();
       toastInfo(`Tema: ${getThemeLabel()}`);
+      return;
+    }
+
+    /* ── "r" : zgjedh një student në fat ── */
+    if (event.key.toLowerCase() === "r") {
+      onPick?.();
       return;
     }
 

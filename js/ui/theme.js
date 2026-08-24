@@ -21,11 +21,16 @@ const META = {
 let current = "system";
 
 function paint() {
+  /* Mbrojtje: nëse në localStorage ka mbetur një vlerë e vjetër ose e
+     shtrembëruar (p.sh. "auto"), `META[current]` do të ishte `undefined`
+     dhe `.icon` do të hidhte gabim — brenda `bootstrap()`, pra i gjithë
+     aplikacioni do të shfaqte shiritin e kuq "nuk u nis". */
+  const meta = META[current] ?? META.system;
   document.documentElement.dataset.theme = current;
   const icon = $("#themeIcon");
   const label = $("#themeLabel");
-  if (icon) icon.textContent = META[current].icon;
-  if (label) label.textContent = META[current].label;
+  if (icon) icon.textContent = meta.icon;
+  if (label) label.textContent = meta.label;
 }
 
 /** Kalon në temën e radhës. Modulo → cikël i pafund pa `if`-e. */
@@ -44,7 +49,7 @@ export function setTheme(theme) {
 export const getTheme = () => current;
 
 /** Emri i temës në shqip — për toaste dhe tekste UI. */
-export const getThemeLabel = () => META[current].label;
+export const getThemeLabel = () => (META[current] ?? META.system).label;
 
 /** A është ekrani aktualisht i errët? Grafikët e pyesin për ngjyra. */
 export const isDark = () =>
@@ -52,8 +57,8 @@ export const isDark = () =>
   (current === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
 export function initTheme({ onChange } = {}) {
-  current = loadTheme();
-  paint();
+  // `setTheme` e normalizon vlerën (dhe e rishkruan të pastër në storage).
+  setTheme(loadTheme());
 
   $("#themeToggle")?.addEventListener("click", () => {
     cycleTheme();

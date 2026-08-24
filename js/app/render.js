@@ -17,6 +17,8 @@ import { StorageError } from "../core/errors.js";
 import { renderFilters } from "../ui/filters.js";
 import { renderStats } from "../ui/stats.js";
 import { renderStudentList } from "../ui/studentList.js";
+import { renderPodium } from "../ui/podium.js";
+import { renderAchievements } from "../ui/achievements.js";
 import { renderStorageLab } from "../ui/labs/index.js";
 import { toastError } from "../ui/toast.js";
 
@@ -45,6 +47,8 @@ export function connectRenderer(store) {
     renderFilters(state);
     renderStudentList(state);
     renderStats(state);
+    renderPodium(state);
+    renderAchievements(state);
     renderCharts(state);
     renderStorageLab();
   };

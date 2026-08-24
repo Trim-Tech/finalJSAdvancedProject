@@ -161,6 +161,11 @@ export function refreshChartTheme() {
 
   const { text, grid } = themeColors();
 
+  /* `Chart.defaults.color` vendoset njëherë në `initCharts()` dhe e përcakton
+     ngjyrën e çdo teksti që nuk e mbishkruajmë vetë (tooltip-i, etiketat).
+     Nëse harrohet këtu, tooltip-at mbeten me ngjyrën e temës së vjetër. */
+  Chart.defaults.color = text;
+
   for (const chart of [barChart, doughnutChart]) {
     chart.options.plugins.legend.labels &&= { ...chart.options.plugins.legend.labels, color: text };
   }

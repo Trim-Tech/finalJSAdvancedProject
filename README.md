@@ -4,7 +4,7 @@
 
 Një aplikacion i vetëm, pa `npm install`, pa build, që demonstron **çdo temë** të
 syllabus-it 12-javor. Është ndërtuar mbi projektin e Javës 11 (`week11_student_manager`),
-por i rishkruar si projekt "i vërtetë": 27 module, arkitekturë me shtresa,
+por i rishkruar si projekt "i vërtetë": 47 module, arkitekturë me shtresa,
 trajtim gabimesh, dhe një laborator interaktiv për konceptet e vështira.
 
 ---
@@ -31,7 +31,7 @@ shih `js/services/api.js`.
 
 | Tab | Çka shihni | Temat e syllabus-it |
 |---|---|---|
-| **Paneli** | Statistika, dy grafikë Chart.js, ndarje sipas kursit | Java 2, 11 |
+| **Paneli** | Statistika, niveli i klasës, podiumi, trofetë, dy grafikë Chart.js | Java 2, 8, 11 |
 | **Studentët** | Formular me validim, kërkim/filtrim/renditje, CRUD, import/eksport JSON | Java 3, 9, 10 |
 | **Laboratori** | 4 eksperimente: Event Loop, Callback→Promise→async, Web APIs, Storage | Java 5–8, 10 |
 | **Harta e mësimit** | Syllabus-i → skedarët përkatës, brenda aplikacionit | Java 4 |
@@ -44,9 +44,30 @@ shih `js/services/api.js`.
 - ✅ Dy grafikë Chart.js që ndjekin temën e errët/ndritshme
 - ✅ Import 5 studentësh të vërtetë nga **randomuser.me** (Fetch)
 - ✅ Shkarko / lexo **JSON** (Blob + FileReader)
-- ✅ Tema e errët/ndritshme/sistem, e ruajtur
-- ✅ Shkurtesa tastiere: `/` `T` `1–4` `Ctrl+Z`
+- ✅ Tema e errët/ndritshme/sistem, e ruajtur (parazgjedhja: **e errët**)
+- ✅ Shkurtesa tastiere: `/` `T` `R` `1–4` `Ctrl+Z`
 - ✅ Toaste, dialog nativ `<dialog>`, gjendje boshe, `aria-*`
+
+### 🎮 Shtresa "lojë" — çka e bën projektin argëtues
+
+Të gjitha këto ndërtohen mbi TË NJËJTAT të dhëna (notat). Asnjë e dhënë e re
+nuk ruhet — vetëm mënyra si i shohim ndryshon. Kjo është pikërisht ideja e
+"të dhënave të derivuara" nga Java 2.
+
+| Çka | Ku jeton | Çka mëson |
+|---|---|---|
+| **Gradat & XP** (Novic → Diamant) | `core/ranks.js` | funksione të pastra, `find`, `clamp` |
+| **Niveli i klasës** | `core/ranks.js` + `ui/stats.js` | `reduce`, numra që "ngjiten" me rAF |
+| **Podiumi (Top 3)** | `ui/podium.js` | renditje **e qëndrueshme** (notë, pastaj emër) |
+| **Trofetë / Arritjet** | `core/achievements.js` + `ui/achievements.js` | `every` / `some` / `Set`, "çka është E RE?" |
+| **«Kush përgjigjet?» 🎲** | `ui/picker.js` | `await` në një lak — pa e ngrirë faqen |
+| **Konfeti** | `ui/confetti.js` | `requestAnimationFrame`, `transform`, pastrim i DOM-it |
+
+> **Provojeni:** shtypni `R` kudo në aplikacion. Ruleta rrotullohet ~2.4 sekonda
+> dhe ndalet butë — dhe gjatë gjithë kohës faqja mbetet plotësisht e klikueshme.
+> Krahasojeni me butonin «🥶 Blloko 1.5s» te Laboratori: i njëjti lak, e njëjta
+> kohë, por pa `await` — dhe gjithçka ngrin. Ky është i gjithë mësimi i Javës 8
+> në dy butona.
 
 ---
 
@@ -91,11 +112,12 @@ Rregulli i vetëm që mban gjithçka bashkë: **varësitë shkojnë vetëm nga p
 ├── assets/
 │   └── icon.svg
 │
-├── css/                    ← 4 skedarë, të ndarë sipas përgjegjësisë
+├── css/                    ← 5 skedarë, të ndarë sipas përgjegjësisë
 │   ├── tokens.css           · ngjyrat & hapësirat (design tokens + tema)
 │   ├── base.css             · reset + elementë bazë
 │   ├── layout.css           · grid, topbar, tabs
-│   └── components.css       · karta, butona, toast, modal, log…
+│   ├── components.css       · karta, butona, toast, modal, log…
+│   └── arena.css            · shtresa "lojë": rrjeti, shkëlqimet, XP, podium…
 │
 └── js/
     ├── main.js             ← PIKA E HYRJES. Vetëm bootstrap, zero logjikë.
@@ -116,6 +138,8 @@ Rregulli i vetëm që mban gjithçka bashkë: **varësitë shkojnë vetëm nga p
     │   ├── validation.js    · regex + rregulla për fushë
     │   ├── statistics.js    · map / filter / reduce / sort
     │   ├── selectors.js     · të dhëna të derivuara (filtro → rendit)
+    │   ├── ranks.js         · notë → gradë + XP (Novic … Diamant)
+    │   ├── achievements.js  · trofetë si të dhëna, jo si `if`-e
     │   └── store.js         · observer pattern në 50 rreshta
     │
     ├── services/           ← Java 5, 6, 7, 10: bota e jashtme
@@ -130,6 +154,7 @@ Rregulli i vetëm që mban gjithçka bashkë: **varësitë shkojnë vetëm nga p
     │   ├── toast.js  modal.js  theme.js  tabs.js  shortcuts.js
     │   ├── form.js  studentList.js  filters.js  stats.js
     │   ├── quote.js  importExport.js  lessonMap.js
+    │   ├── podium.js  achievements.js  picker.js  confetti.js
     │   └── labs/            · logPanel, eventLoop, async, webApi, storage
     │
     ├── charts/
@@ -179,8 +204,8 @@ Këtë tabelë ia trego klasës. Ajo shpjegon **pse** refaktorojmë.
 | Gabimet | `alert` / mesazh i vetëm | `ValidationError` / `ApiError` / `StorageError` | `catch` reagon sipas tipit |
 | Grafiku | `chart.destroy()` + `new Chart()` | `chart.data = …; chart.update()` | Animacion i qetë, pa harxhim memorie |
 | Async | vetëm sinkron | callback / Promise / `async` + `allSettled` | I gjithë Muaji 2 |
-| CSS | një skedar 120 rreshta | 4 skedarë + design tokens | Tema e errët = 30 rreshta |
-| Struktura | 5 module të rrafshëta | 27 module në 6 shtresa | Skalohet |
+| CSS | një skedar 120 rreshta | 5 skedarë + design tokens | Tema e errët = 30 rreshta |
+| Struktura | 5 module të rrafshëta | 47 module në 6 shtresa | Skalohet |
 
 ---
 

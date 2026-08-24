@@ -10,7 +10,7 @@
 
 import { Person } from "./Person.js";
 import { COURSES, GRADES, GRADE_LABELS } from "../config.js";
-import { clamp, titleCase } from "../core/utils.js";
+import { clamp, titleCase, toNumber } from "../core/utils.js";
 
 export class Student extends Person {
   constructor({
@@ -25,10 +25,14 @@ export class Student extends Person {
     // `super()` DUHET të thirret i pari — përpara se të përdorim `this`.
     super({ id, name, age });
 
-    this.grade = clamp(Number(grade), GRADES.MIN, GRADES.MAX);
-    this.email = email.trim().toLowerCase();
-    this.course = course;
-    this.createdAt = createdAt;
+    /* I njëjti rregull si te Person: pastro në hyrje.
+     * `email.trim()` pëlciste me `email: null` në një skedar JSON të importuar —
+     * dhe ngaqë `importFromJson` i ndërton të gjithë me `map()`, NJË rekord i
+     * prishur e vriste TË GJITHË importin. `String(x ?? "")` e zgjidh njëherë e mirë. */
+    this.grade = clamp(Math.round(toNumber(grade, GRADES.MIN)), GRADES.MIN, GRADES.MAX);
+    this.email = String(email ?? "").trim().toLowerCase();
+    this.course = String(course ?? "").trim() || COURSES[0];
+    this.createdAt = Student.safeDate(createdAt);
   }
 
   /* ------------------------------------------------------------ getters --- */
@@ -76,6 +80,12 @@ export class Student extends Person {
 
   /* --------------------------------------------- metoda statike (factory) --- */
 
+  /** Datë e vlefshme ISO, ose "tani". Mbron renditjen sipas datës. */
+  static safeDate(value) {
+    const date = new Date(value ?? "");
+    return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
+  }
+
   /** Objekt i thjeshtë (nga localStorage/JSON) → instancë e vërtetë Student. */
   static fromJSON(raw) {
     return new Student(raw);
@@ -86,7 +96,7 @@ export class Student extends Person {
     const { name = {}, dob = {}, email = "" } = user ?? {};
     return new Student({
       name: titleCase(`${name.first ?? "Pa"} ${name.last ?? "Emër"}`),
-      age: clamp(Math.round(dob.age ?? 20), 6, 100),
+      age: clamp(Math.round(toNumber(dob.age, 20)), 6, 100),
       grade: Student.randomGrade(),
       email,
       course,

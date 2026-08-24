@@ -123,7 +123,9 @@ export const saveActiveTab = (tab) => session.write(STORAGE_KEYS.activeTab, tab)
 export const loadActiveTab = () => session.read(STORAGE_KEYS.activeTab, "panel");
 
 export const saveTheme = (theme) => local.write(STORAGE_KEYS.theme, theme);
-export const loadTheme = () => local.read(STORAGE_KEYS.theme, "system");
+/* Parazgjedhja është "dark": identiteti i aplikacionit është blu mbi të zezë.
+   Kush e do të ndritshme, e ndërron me tastin `T` — dhe zgjedhja i ruhet. */
+export const loadTheme = () => local.read(STORAGE_KEYS.theme, "dark");
 
 /** Sa hapësirë po zë projekti? Përdoret nga Storage Lab. */
 export function storageReport() {

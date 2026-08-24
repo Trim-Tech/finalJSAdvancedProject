@@ -21,6 +21,16 @@ export const sum = (...numbers) => numbers.reduce((total, n) => total + n, 0);
 /** SPREAD (...) — e shpërndan vargun si argumente: sum(...[1,2,3]) */
 export const sumOf = (array) => sum(...array);
 
+/**
+ * Kthen GJITHMONË një numër të përdorshëm.
+ * `Number("abc")` jep NaN, dhe NaN "infektohet": NaN + 5 = NaN, dhe i gjithë
+ * paneli shfaq NaN. Ky funksion e ndal infeksionin te kufiri i të dhënave.
+ */
+export const toNumber = (value, fallback = 0) => {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+};
+
 /** E mban `value` brenda kufijve. Default params në veprim. */
 export const clamp = (value, min = 0, max = 100) =>
   Math.min(Math.max(value, min), max);

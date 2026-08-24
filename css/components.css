@@ -750,6 +750,19 @@ pre.code {
  * Zgjidhja: `display` VETËM kur dialogu është i hapur.
  */
 .modal {
+  /* ⚠️ BUG I VËRTETË, I KAPUR NË SCREENSHOT:
+   *
+   * Shfletuesi e qendërzon një `<dialog>` modal me rregullin e vet
+   * `dialog:modal { inset: 0; margin: auto; }`. Por `base.css` fillon me
+   * rivendosjen `* { margin: 0 }` — dhe ai yll e mund rregullin e shfletuesit.
+   * Rezultati: dialogu «A jeni i sigurt?» hapej i ngjitur në KËNDIN E SIPËRM
+   * MAJTAS të ekranit, jo në mes.
+   *
+   * `open`-i ishte `true`, testet kalonin, dhe askush nuk e vinte re derisa
+   * dikush e pa faqen me sy. Mësimi: një rivendosje universale (`*`) fshin
+   * edhe rregulla që nuk i ke shkruar ti. */
+  margin: auto;
+
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);

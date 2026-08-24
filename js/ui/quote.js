@@ -22,7 +22,7 @@ export async function loadQuote() {
   const { quote, author, source } = await fetchQuote();
 
   box.classList.remove("quote--loading");
-  textNode.textContent = `„${quote}"`;
+  textNode.textContent = `„${quote}“`;
   authorNode.textContent = `— ${author}${source === "fallback" ? " · (offline)" : ""}`;
   box.dataset.source = source;
 }

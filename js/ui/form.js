@@ -13,6 +13,7 @@ import { ValidationError, describeError } from "../core/errors.js";
 import { validateField } from "../core/validation.js";
 import { range } from "../core/utils.js";
 import { $, $$, fillSelect, toggle } from "./dom.js";
+import { burst } from "./confetti.js";
 import { toastError, toastSuccess } from "./toast.js";
 
 let form, submitButton, formTitle, cancelButton, editingIdInput;
@@ -90,6 +91,10 @@ export function initForm({ store, actions }) {
       toastSuccess(
         wasEditing ? `${student.name} u përditësua.` : `${student.name} u shtua.`
       );
+
+      // Nota maksimale e meriton një festë të vogël. 🎉
+      if (student.grade === GRADES.MAX) burst({ count: 70, y: 0.4 });
+
       $("#name").focus();
     } catch (error) {
       /* MËSIMI: Java 7 — `instanceof` vendos SI reagojmë.

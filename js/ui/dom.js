@@ -99,6 +99,9 @@ export function downloadFile(filename, content, type = "application/json") {
   document.body.append(link);
   link.click();
   link.remove();
-  // Pa `revokeObjectURL` rrjedh memorie — pjesë e higjienës së Web API-ve.
-  URL.revokeObjectURL(url);
+  /* Pa `revokeObjectURL` rrjedh memorie — pjesë e higjienës së Web API-ve.
+     POR: revokimi në të njëjtin rresht me `click()` e anulon shkarkimin në
+     Firefox, sepse shfletuesi ende nuk e ka lexuar Blob-in. E shtyjmë një
+     "tik" më vonë — atëherë shkarkimi ka nisur dhe memoria lirohet gjithsesi. */
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

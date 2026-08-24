@@ -51,6 +51,8 @@ import { initImportExport } from "./ui/importExport.js";
 import { initShortcuts } from "./ui/shortcuts.js";
 import { renderLessonMap } from "./ui/lessonMap.js";
 import { loadQuote } from "./ui/quote.js";
+import { initAchievements } from "./ui/achievements.js";
+import { initPicker, openPicker } from "./ui/picker.js";
 
 /* --- charts: biblioteka e jashtme, e izoluar ---------------------------- */
 import { initCharts, refreshChartTheme } from "./charts/gradeCharts.js";
@@ -90,16 +92,28 @@ function bootstrap() {
   initQuickActions({ store, actions });
   initImportExport({ actions });
   initLabs();
-  initShortcuts({ actions, onThemeChange: () => refreshChartTheme() });
+
+  /* --- shtresa "lojë": trofetë dhe zgjedhësi i rastësishëm ---
+     `initAchievements()` DUHET para `store.start()`: ai lexon nga localStorage
+     cilat trofe janë festuar tashmë. Pa këtë, hapja e faqes do t'i festonte
+     të gjitha nga e para, çdo herë. */
+  initAchievements();
+  initPicker({ store });
+
+  initShortcuts({ actions, onThemeChange: () => refreshChartTheme(), onPick: openPicker });
 
   /* --- biblioteka e jashtme: mund të dështojë, dhe kjo është në rregull --- */
   initCharts();
 
-  /* --- navigimi: harta e mësimit vizatohet vetëm kur hapet (lazy) --- */
-  initTabs();
+  /* --- navigimi: harta e mësimit vizatohet vetëm kur hapet (lazy) ---
+     ⚠️ RENDI KA RËNDËSI: `initTabs()` e hap MENJËHERË tab-in e ruajtur në
+     sessionStorage dhe njofton abonentët. Nëse abonohemi PAS tij, njoftimi i
+     parë ka ikur — dhe kush e rifreskonte faqen te «Harta e mësimit» shihte
+     një faqe bosh. Abonohu i pari, nis i dyti. */
   onTabChange((tab) => {
     if (tab === "lesson") renderLessonMap();
   });
+  initTabs();
   if (window.location.hash) {
     // Lidhje të drejtpërdrejta: index.html#lab
     const target = window.location.hash.slice(1);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sq" data-theme="system">
+<html lang="sq" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/arena.css" />
 
   <!--
     MËSIMI: Java 11 — përdorimi i një BIBLIOTEKE të jashtme.
@@ -95,6 +96,60 @@
             Mosha mesatare <strong id="statAge">0</strong>
           </p>
         </article>
+      </div>
+
+      <!-- ============================================ NIVELI I KLASËS -->
+      <!--
+        MËSIMI: e njëjta e dhënë (notat) e treguar në një gjuhë tjetër.
+        Numrat vijnë nga `core/ranks.js` — një funksion i pastër, i testueshëm.
+      -->
+      <section class="card card--hero">
+        <div class="hero__level">
+          <span class="hero__ring" aria-hidden="true"></span>
+          <span class="hero__num" id="teamLevel">1</span>
+          <span class="hero__cap">NIVELI</span>
+        </div>
+
+        <div class="hero__body">
+          <h2 class="hero__title">
+            Klasa <span id="teamRankIcon" aria-hidden="true">🪨</span>
+          </h2>
+          <div class="xp xp--lg">
+            <div class="xp__fill" id="teamXpFill" style="width:0%"></div>
+          </div>
+          <p class="hero__label" id="teamXpLabel">Shto studentin e parë për të nisur nivelin 1.</p>
+        </div>
+
+        <button class="btn btn--primary" id="pickBtn" type="button" title="Zgjedh një student në fat (tasti R)">
+          🎲 Kush përgjigjet?
+        </button>
+      </section>
+
+      <div class="card-grid card-grid--split">
+        <!-- ================================================== PODIUMI -->
+        <section class="card card--podium">
+          <header class="card__head">
+            <h2>🏆 Podiumi</h2>
+            <span class="hint">Renditje e qëndrueshme: notë, pastaj emër</span>
+          </header>
+          <div class="podium" id="podium"></div>
+          <p class="hint" id="podiumEmpty" hidden>Asnjë student ende — podiumi është bosh.</p>
+        </section>
+
+        <!-- ================================================== TROFETË -->
+        <section class="card">
+          <header class="card__head">
+            <h2>🎖 Arritjet</h2>
+            <span class="badge" id="achievementCount">0 / 8</span>
+          </header>
+          <div class="meter meter--slim">
+            <div class="meter__fill" id="achievementMeter" data-tone="ok" style="width:0%"></div>
+          </div>
+          <div class="trophy-grid" id="achievementGrid"></div>
+          <p class="hint hint--win" id="achievementAllDone" hidden>
+            🎉 Të gjitha trofetë u zhbllokuan. Respekt!
+          </p>
+        </section>
       </div>
 
       <div class="card-grid">
@@ -188,6 +243,7 @@
           <h3 class="mini-title">Veprime të shpejta</h3>
           <div class="quick-actions">
             <button class="btn btn--soft btn--sm" id="seedBtn"      type="button">🌱 Mbush me shembuj</button>
+            <button class="btn btn--soft btn--sm" id="pickBtn2"     type="button">🎲 Kush përgjigjet?</button>
             <button class="btn btn--soft btn--sm" id="importApiBtn" type="button">🌐 Importo nga API</button>
             <button class="btn btn--soft btn--sm" id="exportBtn"    type="button">⬇ Shkarko JSON</button>
             <label class="btn btn--soft btn--sm" for="importFile">⬆ Lexo JSON</label>
@@ -242,6 +298,13 @@
                   <span data-slot="created"></span>
                 </p>
                 <p class="student__email" data-slot="email"></p>
+
+                <!-- Grada dhe XP: mbushen nga `progressOf()` te core/ranks.js -->
+                <p class="student__rank">
+                  <span class="rank" data-slot="rank"></span>
+                  <span class="student__xp" data-slot="xpText"></span>
+                </p>
+                <div class="xp"><div class="xp__fill" style="width:0%"></div></div>
               </div>
 
               <div class="student__actions">
@@ -374,7 +437,8 @@ console.log("2 · sinkron");</code></pre>
       Shabllon projekti <span id="appVersion"></span>
     </p>
     <p class="footer__hint">
-      Shkurtesa: <kbd>/</kbd> kërko · <kbd>T</kbd> temë · <kbd>Ctrl</kbd>+<kbd>Z</kbd> kthe fshirjen · <kbd>1–4</kbd> tabs
+      Shkurtesa: <kbd>/</kbd> kërko · <kbd>T</kbd> temë · <kbd>R</kbd> kush përgjigjet ·
+      <kbd>Ctrl</kbd>+<kbd>Z</kbd> kthe fshirjen · <kbd>1–4</kbd> tabs
     </p>
   </footer>
 
@@ -391,6 +455,22 @@ console.log("2 · sinkron");</code></pre>
     <div class="modal__actions">
       <button class="btn btn--ghost" id="confirmCancel" type="button" value="cancel">Anulo</button>
       <button class="btn btn--danger" id="confirmOk" type="button" value="ok">Vazhdo</button>
+    </div>
+  </dialog>
+
+  <!--
+    ZGJEDHËSI I RASTËSISHËM — «Kush përgjigjet?»
+    I njëjti element nativ <dialog> si te konfirmimi. Animacioni brenda është
+    thjesht një lak me `await sleep(...)` — shih js/ui/picker.js.
+  -->
+  <dialog class="modal picker" id="pickerDialog">
+    <p class="picker__cap">🎲 Kush përgjigjet?</p>
+    <p class="picker__name" id="pickerName">…</p>
+    <p class="picker__rank rank" id="pickerRank"></p>
+    <p class="picker__sub" id="pickerSub">Duke zgjedhur…</p>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" id="pickerClose" type="button">Mbyll</button>
+      <button class="btn btn--primary" id="pickerSpin" type="button">🎲 Rrotullo sërish</button>
     </div>
   </dialog>
 

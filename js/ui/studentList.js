@@ -11,6 +11,7 @@
  * ==========================================================================*/
 
 import { formatDate, plural } from "../core/utils.js";
+import { progressOf } from "../core/ranks.js";
 import { selectVisibleStudents, hasActiveFilters } from "../core/selectors.js";
 import { $, clear, fillSlots, fromTemplate, toggle, delegate } from "./dom.js";
 
@@ -42,6 +43,11 @@ function buildRow(student) {
   const row = fromTemplate("studentCardTemplate");
   row.dataset.id = student.id;
 
+  /* Grada dhe XP-ja llogariten në `core/ranks.js` — një funksion i pastër.
+     Ky modul vetëm i VENDOS në ekran. Nëse nesër duam 7 grada në vend të 5,
+     ky skedar nuk ndryshon fare. */
+  const { rank, xp, xpMax, fill } = progressOf(student);
+
   // `textContent` (brenda fillSlots) e trajton çdo input si TEKST —
   // edhe `<script>` në emër do dukej si tekst. Mbrojtje falas nga XSS.
   fillSlots(row, {
@@ -52,10 +58,19 @@ function buildRow(student) {
     age: student.age,
     created: formatDate(student.createdAt),
     email: student.email || "—",
+    rank: `${rank.icon} ${rank.label}`,
+    xpText: `${xp} / ${xpMax} XP`,
   });
 
   // Ngjyra e "chip"-it vjen nga getter-i `gradeTone` i klasës Student.
   row.querySelector('[data-slot="grade"]').classList.add(`chip--${student.gradeTone}`);
+  row.querySelector('[data-slot="rank"]').classList.add(`rank--${rank.key}`);
+  row.querySelector(".avatar").dataset.rank = rank.key;
+
+  const xpFill = row.querySelector(".xp__fill");
+  xpFill.style.width = `${fill}%`;
+  xpFill.classList.add(`xp__fill--${rank.key}`);
+
   row.classList.toggle("student--failing", !student.passed);
 
   return row;
